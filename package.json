@@ -1,0 +1,18 @@
+{
+  "name": "autofish",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "hex-rgb": "^3.0.0",
+    "iohook": "^0.2.0",
+    "jimp": "^0.3.5",
+    "robotjs": "^0.5.1"
+  }
+}
