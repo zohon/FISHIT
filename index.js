@@ -4,17 +4,31 @@ const Jimp = require('jimp');
 const hexRgb = require('hex-rgb');
 
 let inProgress = false;
-
 let numberFish = 0;
+let stop = true;
 
-// const ioHook = require('iohook');
-// ioHook.on('keyup', event => {
-//      console.log(event); // { type: 'mousemove', x: 700, y: 400 }
-//     if (event && event.keycode === 0 && !inProgress) {
-//     } 
-// });
+let targetRgb = null;
 
-// ioHook.start();
+const ioHook = require('iohook');
+ioHook.on('mousedown', event => {
+    if(event.x > 0 && event.shiftKey) {
+        var hex = robot.getPixelColor(event.x, event.y);
+        console.log('SET COLOR', hexRgb(hex));
+        if(!targetRgb) {
+            targetRgb = hexRgb(hex);
+            setTimeout(() => {
+                initSearch();
+                setTimeout(() => {
+                    search();
+                }, 2000)
+            }, 2000);
+        } else {
+            targetRgb = hexRgb(hex);
+        }
+    }
+});
+
+ioHook.start();
 
 // Speed up the mouse.
 robot.setMouseDelay(0.2);
@@ -23,61 +37,65 @@ var screenSize = robot.getScreenSize();
 var height = screenSize.height;
 var width = screenSize.width;
 
-const size = 300;
+const size = 400;
 const startX = (width / 2) - (size / 2);
 const startY = (height / 2) - (size / 2);
 
-robot.moveMouse(startX - (size / 2), startY + (size / 2));
-
 let TargetPos = null;
 let searching = true;
+let catchTime = 0;
 
+let timeBeforeFail = 25000;
 
-(function searching() {
+function initSearch() {
+    catchTime = new Date().getTime();
+    robot.moveMouse(startX - (size / 2), startY + (size / 2));
+    robot.mouseClick();
+    robot.keyTap('a');
+}
+
+function search() {
     searchColor().then(info => {
         if (info) {
-            console.log('CHANGE !!!!');
+            console.log('CATCH !!!!', Math.abs(catchTime - new Date().getTime())/1000);
             searching = false;
             clickAndFish(TargetPos)
                 .then(() => {
                     TargetPos = null;
-
                     searching = true;
+                    catchTime = new Date().getTime();
                     setTimeout(() => {
-                        searching();
+                        search();
                     }, 2000)
-
                 }).catch(() => {
-                    searching();
+                    search();
                 });
+        } else if(Math.abs(catchTime - new Date().getTime()) > timeBeforeFail) {
+            console.log('WHERE');
+            initSearch();
+            search();
         } else {
-            searching();
+            search();
         }
     }).catch(() => {
-
-        searching();
+        if(Math.abs(catchTime - new Date().getTime()) > timeBeforeFail) {
+            console.log('WHERE');
+            initSearch();
+            search();
+        } else {
+            search();
+        }
+        
     });
 
-})()
-
-// setInterval(() => {
-//     if(searching) {
-
-//     }
-// }, 100);
+}
 
 function searchColor() {
     return new Promise((resolve, reject) => {
-
         if (TargetPos) {
             var hex = robot.getPixelColor(startX + TargetPos.x, startY + TargetPos.y);
-            if (Math.abs(hexRgb(hex).red - hexRgb(TargetPos.hex).red) > 20 && Math.abs(hexRgb(hex).blue - hexRgb(TargetPos.hex).blue) > 20 && Math.abs(hexRgb(hex).green - hexRgb(TargetPos.hex).green) > 20) {
-                console.log(Math.abs((hexRgb(hex).red + hexRgb(hex).green + hexRgb(hex).blue) - (hexRgb(TargetPos.hex).red + hexRgb(TargetPos.hex).green + hexRgb(TargetPos.hex).blue)), Math.abs(hexRgb(hex).green - hexRgb(TargetPos.hex).green), Math.abs(hexRgb(hex).red - hexRgb(TargetPos.hex).red), Math.abs(hexRgb(hex).blue - hexRgb(TargetPos.hex).blue));
-            }
-            if (Math.abs((hexRgb(hex).red + hexRgb(hex).green + hexRgb(hex).blue) - (hexRgb(TargetPos.hex).red + hexRgb(TargetPos.hex).green + hexRgb(TargetPos.hex).blue)) > 50) {
+            if (Math.abs((hexRgb(hex).red + hexRgb(hex).green + hexRgb(hex).blue) - (hexRgb(TargetPos.hex).red + hexRgb(TargetPos.hex).green + hexRgb(TargetPos.hex).blue)) > 80) {
                 console.log(Math.abs((hexRgb(hex).red + hexRgb(hex).green + hexRgb(hex).blue) - (hexRgb(TargetPos.hex).red + hexRgb(TargetPos.hex).green + hexRgb(TargetPos.hex).blue)));
-            }
-            if (Math.abs((hexRgb(hex).red + hexRgb(hex).green + hexRgb(hex).blue) - (hexRgb(TargetPos.hex).red + hexRgb(TargetPos.hex).green + hexRgb(TargetPos.hex).blue)) > 100) {
                 resolve(TargetPos);
             } else {
                 resolve();
@@ -91,15 +109,15 @@ function searchColor() {
             const img = robot.screen.capture(startX, startY, size, size);
             // Create a new blank image, same size as Robotjs' one
             // let jimg = new Jimp(size, size);
-            for (x = 0; x < size; x+= 2) {
-                for (y = 0; y < size; y+= 2) {
+            for (x = 0; x < size; x += 4) {
+                for (y = 0; y < size; y += 4) {
                     // hex is a string, rrggbb format
                     var hex = img.colorAt(x, y);
                     if (verifColor(hex) && !TargetPos) {
-                        if (verifColor(img.colorAt(x + 20, y + 5))) {
+                        if (verifColor(img.colorAt(x+10, y+5))) {
                             TargetPos = {
-                                x: x + 20,
-                                y: y + 5,
+                                x: x+10,
+                                y: y+5,
                                 hex: hex
                             };
                             robot.moveMouseSmooth(startX + TargetPos.x + 1, startY + TargetPos.y + 1);
@@ -120,11 +138,11 @@ function searchColor() {
 
 function verifColor(hex) {
 
-    const median = 20;
+    const median = 15;
 
-    const red = 30;
-    const green = 0;
-    const blue = 0;
+    const red = (targetRgb? targetRgb.red : 30);
+    const green = (targetRgb? targetRgb.green : 0);
+    const blue = (targetRgb? targetRgb.blue : 0);
 
     return hexRgb(hex).red > red - median && hexRgb(hex).red < red + median
         && hexRgb(hex).green > green - median && hexRgb(hex).green < green + median
@@ -135,16 +153,17 @@ function verifColor(hex) {
 function clickAndFish(TargetPos) {
     return new Promise((resolve, reject) => {
         const mousePos = robot.getMousePos();
-        console.log(mousePos, TargetPos);
+        //console.log(mousePos, TargetPos);
         if (mousePos.x < 0) {
             robot.moveMouse(startX, startY - 100);
         }
-        robot.moveMouseSmooth(startX + TargetPos.x, startY + TargetPos.y);
-        robot.mouseClick('right');
         setTimeout(() => {
-            //robot.moveMouseSmooth(startX - (size / 2) - (Math.random() * 10), startY + (size / 2) + (Math.random() * 10));
-            robot.keyTap('a');
-            resolve();
-        }, 800 + (Math.random() * 100));
+            robot.moveMouseSmooth(startX + TargetPos.x, startY + TargetPos.y);
+            robot.mouseClick('right');
+            setTimeout(() => {
+                robot.keyTap('a');
+                resolve();
+            }, 1000 + (Math.random() * 100));
+        }, 500 + (Math.random() * 100));
     });
 }
