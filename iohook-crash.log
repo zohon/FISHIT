@@ -1,0 +1,36 @@
+PID 14848 received SIGSEGV for address: 0x1dfd1ff8
+SymInit: Symbol-SearchPath: '.;C:\work\experiment\WOW\Fishit;D:\logiciel\Nodist\v-x64\11.13.0;C:\WINDOWS;C:\WINDOWS\system32;SRV*C:\websymbols*http://msdl.microsoft.com/download/symbols;', symOptions: 530, UserName: 'zohon'
+OS-Version: 10.0.17763 () 0x300-0x1
+c:\work\experiment\wow\fishit\node_modules\segfault-handler\src\stackwalker.cpp (941): StackWalker::ShowCallstack
+c:\work\experiment\wow\fishit\node_modules\segfault-handler\src\segfault-handler.cpp (242): segfault_handler
+00007FF923506B26 (ntdll): (filename not available): RtlInitializeCriticalSectionAndSpinCount
+00007FF9234A4849 (ntdll): (filename not available): RtlWalkFrameChain
+00007FF9235434EE (ntdll): (filename not available): KiUserExceptionDispatcher
+00007FF91DFD1FF8 (iohook): (filename not available): node::MultiIsolatePlatform::~MultiIsolatePlatform
+00007FF91DFD2681 (iohook): (filename not available): node::MultiIsolatePlatform::~MultiIsolatePlatform
+00007FF72B6A7EE4 (node): (filename not available): uv_dlerror
+00007FF72B6A8CB8 (node): (filename not available): uv_run
+00007FF72B633F65 (node): (filename not available): node::Init
+00007FF72B6343E4 (node): (filename not available): node::Init
+00007FF72B63491B (node): (filename not available): node::Start
+00007FF72C18DEEC (node): (filename not available): v8::internal::AsmJsScanner::IsNumberStart
+00007FF921037974 (KERNEL32): (filename not available): BaseThreadInitThunk
+00007FF92350A271 (ntdll): (filename not available): RtlUserThreadStart
+PID 15964 received SIGSEGV for address: 0xf7061ff8
+SymInit: Symbol-SearchPath: '.;C:\work\experiment\WOW\Fishit;D:\logiciel\Nodist\v-x64\11.13.0;C:\WINDOWS;C:\WINDOWS\system32;SRV*C:\websymbols*http://msdl.microsoft.com/download/symbols;', symOptions: 530, UserName: 'zohon'
+OS-Version: 10.0.18363 () 0x300-0x1
+c:\work\experiment\wow\fishit\node_modules\segfault-handler\src\stackwalker.cpp (941): StackWalker::ShowCallstack
+c:\work\experiment\wow\fishit\node_modules\segfault-handler\src\segfault-handler.cpp (242): segfault_handler
+00007FF8055785B6 (ntdll): (filename not available): RtlIsGenericTableEmpty
+00007FF80556A056 (ntdll): (filename not available): RtlRaiseException
+00007FF80559FE3E (ntdll): (filename not available): KiUserExceptionDispatcher
+00007FFFF7061FF8 (iohook): (filename not available): node::MultiIsolatePlatform::~MultiIsolatePlatform
+00007FFFF7062681 (iohook): (filename not available): node::MultiIsolatePlatform::~MultiIsolatePlatform
+00007FF6B4C27EE4 (node): (filename not available): uv_dlerror
+00007FF6B4C28CB8 (node): (filename not available): uv_run
+00007FF6B4BB3F65 (node): (filename not available): node::Init
+00007FF6B4BB43E4 (node): (filename not available): node::Init
+00007FF6B4BB491B (node): (filename not available): node::Start
+00007FF6B570DEEC (node): (filename not available): v8::internal::AsmJsScanner::IsNumberStart
+00007FF803937BD4 (KERNEL32): (filename not available): BaseThreadInitThunk
+00007FF80556CE51 (ntdll): (filename not available): RtlUserThreadStart

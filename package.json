@@ -5,14 +5,21 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "npm run classic",
+    "classic": "node classic",
+    "retail": "node retail"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "hex-rgb": "^3.0.0",
-    "iohook": "^0.2.0",
-    "jimp": "^0.3.5",
-    "robotjs": "^0.5.1"
+    "inquirer": "^7.3.1",
+    "iohook": "^0.2.6",
+    "jimp": "^0.10.3",
+    "lodash": "^4.17.19",
+    "pixelmatch": "^5.0.2",
+    "png-js": "^0.1.1",
+    "robotjs": "^0.5.1",
+    "update": "^0.7.4"
   }
 }
