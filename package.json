@@ -16,7 +16,7 @@
     "inquirer": "^7.3.1",
     "iohook": "^0.2.6",
     "jimp": "^0.10.3",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.21",
     "pixelmatch": "^5.0.2",
     "png-js": "^0.1.1",
     "robotjs": "^0.5.1",
